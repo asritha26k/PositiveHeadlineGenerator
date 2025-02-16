@@ -1,13 +1,18 @@
-from fastapi import FastAPI, Body
-from fastapi.responses import PlainTextResponse
+from fastapi import FastAPI
+from pydantic import BaseModel
 from model_loader import predict  # Import directly from model_loader.py
 
 app = FastAPI()
 
+# Root endpoint to check if API is working
 @app.get("/")
 def read_root():
-    return "API is working!"
+    return {"message": "API is working!"}
 
-@app.post("/predict/", response_class=PlainTextResponse)
-def get_prediction(text: str = Body(..., media_type="text/plain")):
-    return predict(text)
+class InputText(BaseModel):
+    text: str
+
+@app.post("/predict/")
+def get_prediction(input_data: InputText):
+    result = predict(input_data.text)
+    return {"modified_text": result}
