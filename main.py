@@ -4,6 +4,11 @@ from model_loader import predict  # Import directly from model_loader.py
 
 app = FastAPI()
 
+# Root endpoint to check if API is working
+@app.get("/")
+def read_root():
+    return {"message": "API is working!"}
+
 class InputText(BaseModel):
     text: str
 
